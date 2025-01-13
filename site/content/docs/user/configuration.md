@@ -217,14 +217,14 @@ networking:
 
 #### kube-proxy mode
 
-You can configure the kube-proxy mode that will be used, between iptables and ipvs. By
-default iptables is used
+You can configure the kube-proxy mode that will be used, between iptables, nftables (Kubernetes v1.31+), and ipvs.
+By default iptables is used
 
 {{< codeFromInline lang="yaml" >}}
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 networking:
-  kubeProxyMode: "ipvs"
+  kubeProxyMode: "nftables"
 {{< /codeFromInline >}}
 
 To disable kube-proxy, set the mode to `"none"`.
@@ -260,6 +260,9 @@ nodes:
 - role: worker
 - role: worker
 {{< /codeFromInline >}}
+
+Multiple `control-plane` nodes may be specified in order to test a "high availability"
+control plane.
 
 ## Per-Node Options
 
@@ -307,6 +310,9 @@ If you are running Docker without the Docker Desktop Application on Linux, you c
 With the installation of the Docker Desktop Application, whether it is on macOs, Windows or Linux, you'll want to use these.
 
 You may also want to see the [Ingress Guide].
+
+> **NOTE**: If you're running Kind on a remote host and need to send traffic to Kind node
+> IPs from a different host than where kind is running, you need to configure port-mapping.
 
 {{< codeFromFile file="static/examples/config-with-port-mapping.yaml" lang="yaml" >}}
 
